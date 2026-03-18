@@ -6,10 +6,7 @@
 
 A lightweight Unix shell implementation built from scratch in C — a 42 School project.
 
-![Language](https://img.shields.io/badge/Language-C-blue?style=flat-square)
-![School](https://img.shields.io/badge/School-42-black?style=flat-square)
-![Status](https://img.shields.io/badge/Status-Completed-brightgreen?style=flat-square)
-![Norm](https://img.shields.io/badge/Norminette-passing-success?style=flat-square)
+Language: C &nbsp;|&nbsp; School: 42 &nbsp;|&nbsp; Status: Completed &nbsp;|&nbsp; Norminette: passing
 
 </div>
 
@@ -132,23 +129,26 @@ minishell/
 Input String
      │
      ▼
-  Lexer (Tokenization)
-     │
+  Tokenizer  (token_parse)
+     │  tokenize() → t_token list
      ▼
-  Parser (Build AST / Command Table)
-     │
+  Pipe Splitter  (token_parse)
+     │  split_tokens_by_pipe() → t_segment list
      ▼
-  Expander (Expand $VAR, quotes)
-     │
+  Parser  (token_parse)
+     │  parse_input() → t_command list
      ▼
-  Executor (fork, execve, pipes, redirections)
-     │
+  Expander  (extras)
+     │  expand_all_variables(), prepare_heredocs()
+     ▼
+  Executor  (execute)
+     │  execute_command() → fork, execve, pipes, redirections
      ▼
   Output / Next Prompt
 ```
 
-1. **token_parse** — Splits raw input into tokens and organizes them into a structured command representation
-2. **Expander** — Resolves environment variables and handles quote rules
+1. **token_parse** — Tokenizes raw input, splits by pipes into segments, then builds a linked list of `t_command` structs
+2. **extras** — Handles environment variable expansion (`$VAR`, `$?`) and heredoc preparation
 3. **execute** — Forks child processes, sets up pipes and redirections, and calls `execve`
 4. **builtins** — Handles built-in commands directly without forking
 
@@ -175,8 +175,8 @@ Some edge cases to verify:
 
 ## ⚠️ Known Limitations
 
-- Does not support logical operators (`&&`, `||`) — unless bonus is implemented
-- No wildcard/glob expansion (`*`) — unless bonus is implemented
+- Does not support logical operators (`&&`, `||`)
+- No wildcard/glob expansion (`*`)
 - Not a fully POSIX-compliant shell
 
 ---
